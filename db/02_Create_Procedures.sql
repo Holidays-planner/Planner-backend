@@ -278,15 +278,17 @@ $$;
 -- Procedure to set a user's setting value
 CREATE OR REPLACE PROCEDURE set_user_setting(
     p_user_id INT,
-    p_setting_id INT
+    p_setting_id INT,
+    p_option_id INT
 )
 LANGUAGE plpgsql
 AS $$
 BEGIN
-    INSERT INTO user_settings (user_id, setting_id)
-    VALUES (p_user_id, p_setting_id)
+    INSERT INTO user_settings (user_id, setting_id, option_id)
+    VALUES (p_user_id, p_setting_id, p_option_id)
     ON CONFLICT (user_id, setting_id) DO UPDATE
-    SET updated_at = NOW();
+    SET option_id = p_option_id,
+        updated_at = NOW();
 END;
 $$;
 

@@ -53,7 +53,7 @@ Creates stored procedures for database operations. All procedures use PostgreSQL
 - **`remove_setting_option(p_option_id)`** - Remove a setting option
 
 ### User Settings
-- **`set_user_setting(p_user_id, p_setting_id)`** - Set a user's setting
+- **`set_user_setting(p_user_id, p_setting_id, p_option_id)`** - Set a user's setting with a specific option value
 - **`remove_user_setting(p_user_id, p_setting_id)`** - Remove a user's setting
 
 ## Usage
@@ -96,8 +96,8 @@ CALL create_setting('theme', 'light');
 CALL add_setting_option(1, 'light');
 CALL add_setting_option(1, 'dark');
 
--- Set user setting
-CALL set_user_setting(1, 1);
+-- Set user setting (assuming option_id 1 is 'light')
+CALL set_user_setting(1, 1, 1);
 ```
 
 ## Notes

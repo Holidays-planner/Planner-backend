@@ -73,6 +73,7 @@ CREATE TABLE user_settings (
     id SERIAL PRIMARY KEY,                    -- Unique ID for each user-setting combination
     user_id INT REFERENCES users(user_id) ON DELETE CASCADE, -- Foreign key to `users`
     setting_id INT REFERENCES settings(setting_id) ON DELETE CASCADE, -- Foreign key to `settings`
+    option_id INT REFERENCES setting_options(option_id) ON DELETE CASCADE, -- Foreign key to selected option
     created_at TIMESTAMP DEFAULT NOW(),       -- Timestamp of creation
     updated_at TIMESTAMP DEFAULT NOW(),       -- Timestamp of last update
     UNIQUE (user_id, setting_id)              -- Each user can only have one value per setting
