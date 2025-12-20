@@ -1,0 +1,104 @@
+# Docker Setup for Planner Backend
+
+This folder contains Docker configuration for running PostgreSQL database for the Planner Backend application.
+
+## Prerequisites
+
+- Docker installed on your system
+- Docker Compose installed (usually comes with Docker Desktop)
+
+## Quick Start
+
+### Using Docker Compose (Recommended)
+
+1. Navigate to the docker folder:
+   ```bash
+   cd docker
+   ```
+
+2. Start the PostgreSQL container:
+   ```bash
+   docker-compose up -d
+   ```
+
+3. Check if the container is running:
+   ```bash
+   docker-compose ps
+   ```
+
+4. View logs:
+   ```bash
+   docker-compose logs -f postgres
+   ```
+
+5. Stop the container:
+   ```bash
+   docker-compose down
+   ```
+
+6. Stop and remove all data (including volumes):
+   ```bash
+   docker-compose down -v
+   ```
+
+### Using Docker Build Directly
+
+1. Build the Docker image:
+   ```bash
+   docker build -t planner-postgres -f docker/Dockerfile .
+   ```
+
+2. Run the container:
+   ```bash
+   docker run -d \
+     --name planner-postgres \
+     -e POSTGRES_DB=planner_db \
+     -e POSTGRES_USER=planner_user \
+     -e POSTGRES_PASSWORD=planner_password \
+     -p 5432:5432 \
+     -v postgres-data:/var/lib/postgresql/data \
+     planner-postgres
+   ```
+
+## Database Connection
+
+Once the container is running, you can connect to the PostgreSQL database using:
+
+- **Host**: localhost
+- **Port**: 5432
+- **Database**: planner_db
+- **Username**: planner_user
+- **Password**: planner_password
+
+### Connection String Example
+```
+postgresql://planner_user:planner_password@localhost:5432/planner_db
+```
+
+## Database Initialization
+
+The database is automatically initialized with the SQL scripts from the `db/` folder:
+- `01_Create_Tables.sql` - Creates all necessary tables and schema
+
+These scripts are executed automatically when the container is first created.
+
+## Environment Variables
+
+You can customize the following environment variables in the `docker-compose.yml` file:
+
+- `POSTGRES_DB`: Name of the database (default: planner_db)
+- `POSTGRES_USER`: Database user (default: planner_user)
+- `POSTGRES_PASSWORD`: Database password (default: planner_password)
+
+## Troubleshooting
+
+### Container won't start
+- Check if port 5432 is already in use: `lsof -i :5432`
+- View container logs: `docker-compose logs postgres`
+
+### Database not initialized
+- Remove the volume and recreate: `docker-compose down -v && docker-compose up -d`
+
+### Permission issues
+- Ensure the db folder has read permissions
+- Check Docker has access to the project directory
