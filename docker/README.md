@@ -90,6 +90,16 @@ You can customize the following environment variables in the `docker-compose.yml
 - `POSTGRES_USER`: Database user (default: planner_user)
 - `POSTGRES_PASSWORD`: Database password (default: planner_password)
 
+### Security Note
+
+⚠️ **Important**: The default credentials provided in this setup are intended for **development purposes only**. 
+
+For production environments:
+- Use strong, unique passwords
+- Consider using Docker secrets or external secret management systems
+- Do not commit production credentials to version control
+- Use environment files (.env) that are excluded from git (.gitignore)
+
 ## Troubleshooting
 
 ### Container won't start
