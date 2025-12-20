@@ -284,6 +284,14 @@ CREATE OR REPLACE PROCEDURE set_user_setting(
 LANGUAGE plpgsql
 AS $$
 BEGIN
+    -- Validate that the option_id belongs to the specified setting_id
+    IF NOT EXISTS (
+        SELECT 1 FROM setting_options 
+        WHERE option_id = p_option_id AND setting_id = p_setting_id
+    ) THEN
+        RAISE EXCEPTION 'Option % does not belong to setting %', p_option_id, p_setting_id;
+    END IF;
+    
     INSERT INTO user_settings (user_id, setting_id, option_id)
     VALUES (p_user_id, p_setting_id, p_option_id)
     ON CONFLICT (user_id, setting_id) DO UPDATE
