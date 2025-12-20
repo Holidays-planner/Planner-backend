@@ -16,27 +16,32 @@ This folder contains Docker configuration for running PostgreSQL database for th
    cd docker
    ```
 
-2. Start the PostgreSQL container:
+2. Copy the example environment file and customize if needed:
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Start the PostgreSQL container:
    ```bash
    docker-compose up -d
    ```
 
-3. Check if the container is running:
+4. Check if the container is running:
    ```bash
    docker-compose ps
    ```
 
-4. View logs:
+5. View logs:
    ```bash
    docker-compose logs -f postgres
    ```
 
-5. Stop the container:
+6. Stop the container:
    ```bash
    docker-compose down
    ```
 
-6. Stop and remove all data (including volumes):
+7. Stop and remove all data (including volumes):
    ```bash
    docker-compose down -v
    ```
@@ -84,11 +89,19 @@ These scripts are executed automatically when the container is first created.
 
 ## Environment Variables
 
-You can customize the following environment variables in the `docker-compose.yml` file:
+The database configuration is managed through a `.env` file. Copy the `.env.example` file to `.env` and customize as needed:
+
+```bash
+cp .env.example .env
+```
+
+Available environment variables:
 
 - `POSTGRES_DB`: Name of the database (default: planner_db)
 - `POSTGRES_USER`: Database user (default: planner_user)
 - `POSTGRES_PASSWORD`: Database password (default: planner_password)
+
+**Note**: The `.env` file is excluded from version control to protect sensitive credentials.
 
 ### Security Note
 
