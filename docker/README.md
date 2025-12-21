@@ -16,9 +16,12 @@ This folder contains Docker configuration for running PostgreSQL database for th
    cd docker
    ```
 
-2. Copy the example environment file and customize if needed:
+2. Create your environment file with the database configuration:
    ```bash
-   cp .env.example .env
+   # Create .env file with your database settings
+   echo "POSTGRES_DB=planner_db" > .env
+   echo "POSTGRES_USER=planner_user" >> .env  
+   echo "POSTGRES_PASSWORD=planner_password" >> .env
    ```
 
 3. Start the PostgreSQL container:
@@ -50,7 +53,7 @@ This folder contains Docker configuration for running PostgreSQL database for th
 
 1. Build the Docker image:
    ```bash
-   docker build -t planner-postgres -f docker/Dockerfile .
+   docker build -t planner-postgres -f docker/postgresDockerfile .
    ```
 
 2. Run the container:
@@ -89,10 +92,13 @@ These scripts are executed automatically when the container is first created.
 
 ## Environment Variables
 
-The database configuration is managed through a `.env` file. Copy the `.env.example` file to `.env` and customize as needed:
+The database configuration is managed through a `.env` file. Create the `.env` file with your database settings:
 
 ```bash
-cp .env.example .env
+# Create .env file with database configuration
+echo "POSTGRES_DB=planner_db" > .env
+echo "POSTGRES_USER=planner_user" >> .env  
+echo "POSTGRES_PASSWORD=planner_password" >> .env
 ```
 
 Available environment variables:

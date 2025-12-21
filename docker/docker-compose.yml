@@ -2,23 +2,18 @@ services:
   postgres:
     build:
       context: ..
-      dockerfile: docker/Dockerfile
+      dockerfile: docker/postgresDockerfile
     container_name: planner-postgres
     env_file:
-      - .env
+      - .env.local
     ports:
       - "5432:5432"
     volumes:
-      # Persist data outside the container
-      - postgres-data:/var/lib/postgresql/data
       # Mount initialization scripts
       - ../db:/docker-entrypoint-initdb.d
-    restart: unless-stopped
+    restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 10s
       timeout: 5s
       retries: 5
-
-volumes:
-  postgres-data:
