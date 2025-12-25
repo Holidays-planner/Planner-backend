@@ -5,7 +5,7 @@ BEGIN
 
     -- Create `roles` table
     CREATE TABLE IF NOT EXISTS roles (
-        role_id SERIAL PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         role_name VARCHAR(255) NOT NULL UNIQUE,
         description VARCHAR(500),
         created_at TIMESTAMP DEFAULT NOW(),
@@ -14,7 +14,7 @@ BEGIN
 
     -- Create `actions` table for defining what operations can be performed and scopes
     CREATE TABLE IF NOT EXISTS actions (
-        action_id SERIAL PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         action_key VARCHAR(255) NOT NULL,
         scope VARCHAR(100) NOT NULL,
         action_name VARCHAR(255) NOT NULL,
@@ -26,8 +26,8 @@ BEGIN
     -- Create `role_actions` table for many-to-many relationship between roles and actions
     CREATE TABLE IF NOT EXISTS role_actions (
         id SERIAL PRIMARY KEY,
-        role_id INT NOT NULL REFERENCES roles(role_id) ON DELETE CASCADE,
-        action_id INT NOT NULL REFERENCES actions(action_id) ON DELETE CASCADE,
+        role_id INT NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
+        action_id INT NOT NULL REFERENCES actions(id) ON DELETE CASCADE,
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW(),
         UNIQUE (role_id, action_id)
@@ -35,7 +35,7 @@ BEGIN
 
     -- Create `settings` table
     CREATE TABLE IF NOT EXISTS settings (
-        setting_id SERIAL PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         setting_key VARCHAR(255) NOT NULL UNIQUE,
         setting_name VARCHAR(255) NOT NULL,
         setting_default_value TEXT NOT NULL,
@@ -45,8 +45,8 @@ BEGIN
 
     -- Create `setting_options` table
     CREATE TABLE IF NOT EXISTS setting_options (
-        option_id SERIAL PRIMARY KEY,
-        setting_id INT REFERENCES settings(setting_id) ON DELETE CASCADE,
+        id SERIAL PRIMARY KEY,
+        setting_id INT REFERENCES settings(id) ON DELETE CASCADE,
         option_value VARCHAR(255) NOT NULL,
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW(),
@@ -55,7 +55,7 @@ BEGIN
 
     -- Create `users` table
     CREATE TABLE IF NOT EXISTS users (
-        user_id SERIAL PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         username VARCHAR(255) NOT NULL UNIQUE,
         email VARCHAR(255) NOT NULL UNIQUE,
         password_hash TEXT NOT NULL,
@@ -66,8 +66,8 @@ BEGIN
     -- Create `user_roles` table
     CREATE TABLE IF NOT EXISTS user_roles (
         id SERIAL PRIMARY KEY,
-        user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
-        role_id INT REFERENCES roles(role_id) ON DELETE CASCADE,
+        user_id INT REFERENCES users(id) ON DELETE CASCADE,
+        role_id INT REFERENCES roles(id) ON DELETE CASCADE,
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW(),
         UNIQUE (user_id, role_id)
@@ -76,8 +76,8 @@ BEGIN
     -- Create `user_settings` table
     CREATE TABLE IF NOT EXISTS user_settings (
         id SERIAL PRIMARY KEY,
-        user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
-        setting_id INT REFERENCES settings(setting_id) ON DELETE CASCADE,
+        user_id INT REFERENCES users(id) ON DELETE CASCADE,
+        setting_id INT REFERENCES settings(id) ON DELETE CASCADE,
         setting_value VARCHAR(255) NOT NULL,
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW(),
@@ -86,8 +86,8 @@ BEGIN
 
     CREATE TABLE IF NOT EXISTS friends (
         friendship_id SERIAL PRIMARY KEY,
-        requestor_id INT REFERENCES users(user_id) ON DELETE CASCADE,
-        addressee_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+        requestor_id INT REFERENCES users(id) ON DELETE CASCADE,
+        addressee_id INT REFERENCES users(id) ON DELETE CASCADE,
         status VARCHAR(50) NOT NULL,
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW(),
@@ -96,8 +96,8 @@ BEGIN
 
     -- Create `vacation_plans` table
     CREATE TABLE IF NOT EXISTS vacation_plans (
-        plan_id SERIAL PRIMARY KEY,
-        user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+        id SERIAL PRIMARY KEY,
+        user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         title VARCHAR(255) NOT NULL,
         description TEXT,
         start_date DATE NOT NULL,
@@ -112,8 +112,8 @@ BEGIN
 
     -- Create `vacation_destinations` table for multiple destinations per plan
     CREATE TABLE IF NOT EXISTS vacation_destinations (
-        destination_id SERIAL PRIMARY KEY,
-        plan_id INT NOT NULL REFERENCES vacation_plans(plan_id) ON DELETE CASCADE,
+        id SERIAL PRIMARY KEY,
+        plan_id INT NOT NULL REFERENCES vacation_plans(id) ON DELETE CASCADE,
         destination_name VARCHAR(255) NOT NULL,
         country VARCHAR(100),
         city VARCHAR(100),
@@ -128,10 +128,10 @@ BEGIN
 
     -- Create `vacation_plan_participants` table for sharing plans with friends
     CREATE TABLE IF NOT EXISTS vacation_plan_participants (
-        participant_id SERIAL PRIMARY KEY,
-        plan_id INT REFERENCES vacation_plans(plan_id) ON DELETE CASCADE,
-        user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
-        role_id INT REFERENCES roles(role_id) ON DELETE CASCADE,
+        id SERIAL PRIMARY KEY,
+        plan_id INT REFERENCES vacation_plans(id) ON DELETE CASCADE,
+        user_id INT REFERENCES users(id) ON DELETE CASCADE,
+        role_id INT REFERENCES roles(id) ON DELETE CASCADE,
         joined_at TIMESTAMP DEFAULT NOW(),
         UNIQUE (plan_id, user_id)
     );

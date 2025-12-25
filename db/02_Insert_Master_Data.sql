@@ -19,13 +19,13 @@ BEGIN
 
     -- Insert initial setting options
     INSERT INTO setting_options (setting_id, option_value) VALUES
-        ((SELECT setting_id FROM "settings" WHERE setting_key = 'theme'), 'light'),
-        ((SELECT setting_id FROM "settings" WHERE setting_key = 'theme'), 'dark'),
-        ((SELECT setting_id FROM "settings" WHERE setting_key = 'language'), 'en'),
-        ((SELECT setting_id FROM "settings" WHERE setting_key = 'language'), 'es'),
-        ((SELECT setting_id FROM "settings" WHERE setting_key = 'friend_requests'), 'enabled'),
-        ((SELECT setting_id FROM "settings" WHERE setting_key = 'friend_requests'), 'disabled'),
-        ((SELECT setting_id FROM "settings" WHERE setting_key = 'friend_requests'), 'requires_approval')
+        ((SELECT id FROM "settings" WHERE setting_key = 'theme'), 'light'),
+        ((SELECT id FROM "settings" WHERE setting_key = 'theme'), 'dark'),
+        ((SELECT id FROM "settings" WHERE setting_key = 'language'), 'en'),
+        ((SELECT id FROM "settings" WHERE setting_key = 'language'), 'es'),
+        ((SELECT id FROM "settings" WHERE setting_key = 'friend_requests'), 'enabled'),
+        ((SELECT id FROM "settings" WHERE setting_key = 'friend_requests'), 'disabled'),
+        ((SELECT id FROM "settings" WHERE setting_key = 'friend_requests'), 'requires_approval')
     ON CONFLICT (setting_id, option_value) DO NOTHING;
 
     -- Insert initial actions
@@ -56,15 +56,15 @@ RETURNS TRIGGER AS $$
 BEGIN
     INSERT INTO user_roles (user_id, role_id)
     SELECT
-        NEW.user_id,
-        role_id
+        NEW.id,
+        r.id
     FROM
-        roles
+        roles r
     WHERE role_name = 'viewer';
     INSERT INTO user_settings (user_id, setting_id, setting_value)
     SELECT
-        NEW.user_id,
-        s.setting_id,
+        NEW.id,
+        s.id,
         s.setting_default_value
     FROM
         "settings" s;
