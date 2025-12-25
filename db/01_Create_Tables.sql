@@ -2,6 +2,7 @@
 CREATE OR REPLACE PROCEDURE create_all_tables()
 LANGUAGE plpgsql AS $$
 BEGIN
+
     -- Create `roles` table
     CREATE TABLE IF NOT EXISTS roles (
         role_id SERIAL PRIMARY KEY,
@@ -9,6 +10,27 @@ BEGIN
         description VARCHAR(500),
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW()
+    );
+
+    -- Create `actions` table for defining what operations can be performed and scopes
+    CREATE TABLE IF NOT EXISTS actions (
+        action_id SERIAL PRIMARY KEY,
+        action_key VARCHAR(255) NOT NULL,
+        scope VARCHAR(100) NOT NULL,
+        action_name VARCHAR(255) NOT NULL,
+        description VARCHAR(500),
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW()
+    );
+
+    -- Create `role_actions` table for many-to-many relationship between roles and actions
+    CREATE TABLE IF NOT EXISTS role_actions (
+        id SERIAL PRIMARY KEY,
+        role_id INT NOT NULL REFERENCES roles(role_id) ON DELETE CASCADE,
+        action_id INT NOT NULL REFERENCES actions(action_id) ON DELETE CASCADE,
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW(),
+        UNIQUE (role_id, action_id)
     );
 
     -- Create `settings` table
@@ -29,25 +51,6 @@ BEGIN
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW(),
         UNIQUE (setting_id, option_value)
-    );
-
-    -- Create `permissions` table
-    CREATE TABLE IF NOT EXISTS permissions (
-        permission_id SERIAL PRIMARY KEY,
-        permission_key VARCHAR(255) NOT NULL UNIQUE,
-        description VARCHAR(500),
-        created_at TIMESTAMP DEFAULT NOW(),
-        updated_at TIMESTAMP DEFAULT NOW()
-    );
-
-    -- Create `roles_permissions` table
-    CREATE TABLE IF NOT EXISTS roles_permissions (
-        id SERIAL PRIMARY KEY,
-        role_id INT REFERENCES roles(role_id) ON DELETE CASCADE,
-        permission_id INT REFERENCES permissions(permission_id) ON DELETE CASCADE,
-        created_at TIMESTAMP DEFAULT NOW(),
-        updated_at TIMESTAMP DEFAULT NOW(),
-        UNIQUE (role_id, permission_id)
     );
 
     -- Create `users` table
@@ -89,6 +92,48 @@ BEGIN
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW(),
         UNIQUE (requestor_id, addressee_id)
+    );
+
+    -- Create `vacation_plans` table
+    CREATE TABLE IF NOT EXISTS vacation_plans (
+        plan_id SERIAL PRIMARY KEY,
+        user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+        title VARCHAR(255) NOT NULL,
+        description TEXT,
+        start_date DATE NOT NULL,
+        end_date DATE NOT NULL,
+        budget DECIMAL(10,2),
+        status VARCHAR(50) DEFAULT 'draft' CHECK (status IN ('draft', 'planned', 'in_progress', 'completed', 'cancelled')),
+        is_public BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW(),
+        CONSTRAINT valid_date_range CHECK (end_date >= start_date)
+    );
+
+    -- Create `vacation_destinations` table for multiple destinations per plan
+    CREATE TABLE IF NOT EXISTS vacation_destinations (
+        destination_id SERIAL PRIMARY KEY,
+        plan_id INT NOT NULL REFERENCES vacation_plans(plan_id) ON DELETE CASCADE,
+        destination_name VARCHAR(255) NOT NULL,
+        country VARCHAR(100),
+        city VARCHAR(100),
+        arrival_date DATE,
+        departure_date DATE,
+        accommodation VARCHAR(255),
+        notes TEXT,
+        order_sequence INT NOT NULL DEFAULT 1,
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW()
+    );
+
+    -- Create `vacation_plan_participants` table for sharing plans with friends
+    CREATE TABLE IF NOT EXISTS vacation_plan_participants (
+        participant_id SERIAL PRIMARY KEY,
+        plan_id INT REFERENCES vacation_plans(plan_id) ON DELETE CASCADE,
+        user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+        role_id INT REFERENCES roles(role_id) ON DELETE CASCADE,
+        joined_at TIMESTAMP DEFAULT NOW(),
+        UNIQUE (plan_id, user_id)
     );
 
     -- Notify that the procedure has completed
