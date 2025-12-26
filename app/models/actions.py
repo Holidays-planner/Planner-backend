@@ -1,11 +1,12 @@
 from datetime import datetime
-from base import db, BaseModel
+from models.base import db, BaseModel
 
 
 class Actions(BaseModel):
+    __tablename__ = 'actions'
     action_key = db.Column(db.String(255), nullable=False)
-    scope = db.Column(db.String(100), unique=True, nullable=False)
+    scope = db.Column(db.String(100), nullable=False)
     action_name = db.Column(db.String(255), nullable=False)
-    description = db.Column(db.Text)
+    description = db.Column(db.String(500))
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, default=datetime.now(), onupdate=datetime.now())

@@ -1,2 +1,11 @@
 from models.actions import Actions
-from models import User, VacationPlan, VacationParticipant, Friend, Role, RoleActions, VacationDestination, UserRole, Setting, UserSetting
+from models.friends import Friends
+from models.users import Users
+from models.roles import Roles
+from models.role_actions import RoleActions
+from models.user_role import UserRoles
+from models.settings import Setting
+from models.user_setting import UserSetting
+from models.vacation_destination import VacationDestination
+from models.vacation_plan import VacationPlan
+from models.vacation_participant import VacationPlanParticipant

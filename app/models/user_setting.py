@@ -1,12 +1,11 @@
 from datetime import datetime
-from app import db
+from models.base import db, BaseModel
 
-class UserSetting(db.Model):
+class UserSetting(BaseModel):
     __tablename__ = 'user_settings'
 
-    user_setting_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-    setting_id = db.Column(db.Integer, db.ForeignKey('settings.setting_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    setting_id = db.Column(db.Integer, db.ForeignKey('settings.id'), nullable=False)
     setting_value = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, default=datetime.now(), onupdate=datetime.now())
