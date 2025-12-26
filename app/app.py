@@ -1,7 +1,11 @@
 import os
 
-from run import app
+from run import app, api
+from routes.users import users_ns
+from routes.auth import auth_ns
 
+api.add_namespace(users_ns, path='/users')
+api.add_namespace(auth_ns, path='/auth')
 # Health check endpoint
 @app.route('/health')
 def health_check():
@@ -22,4 +26,4 @@ def internal_error(error):
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(debug=True, host='localhost', port=port)
+    app.run(debug=False, host='localhost', port=port)

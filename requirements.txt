@@ -9,4 +9,6 @@ python-dotenv
 marshmallow==3.20.2
 marshmallow-sqlalchemy==0.29.0
 Werkzeug==3.0.1
-
+Flask-WTF
+requests
+flask-restx

@@ -1,13 +1,8 @@
-from sqlalchemy.ext.declarative import declared_attr
 from run import db
 
 
 class BaseModel(db.Model):
     __abstract__ = True
-
-    @declared_attr
-    def __tablename__(self):
-        return self.__name__.lower()
 
     id = db.Column(db.Integer, primary_key=True)
 

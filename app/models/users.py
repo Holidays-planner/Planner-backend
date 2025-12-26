@@ -1,10 +1,10 @@
 from datetime import datetime
-from app import db
+from models.base import db, BaseModel
 
-class User(db.Model):
+
+class Users(BaseModel):
     __tablename__ = 'users'
 
-    user_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), unique=True, nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
@@ -14,7 +14,7 @@ class User(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.now(), onupdate=datetime.now())
 
     # Relationships
-    user_roles = db.relationship('UserRole', backref='user', lazy=True, cascade='all, delete-orphan')
+    user_roles = db.relationship('UserRoles', backref='user', lazy=True, cascade='all, delete-orphan')
     user_settings = db.relationship('UserSetting', backref='user', lazy=True, cascade='all, delete-orphan')
     vacation_plans = db.relationship('VacationPlan', backref='owner', lazy=True, cascade='all, delete-orphan')
 

@@ -1,11 +1,10 @@
 from datetime import datetime
-from app import db
+from models.base import db, BaseModel
 
-class VacationPlan(db.Model):
+class VacationPlan(BaseModel):
     __tablename__ = 'vacation_plans'
 
-    plan_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text)
     start_date = db.Column(db.Date, nullable=False)
