@@ -12,3 +12,5 @@ Werkzeug==3.0.1
 Flask-WTF
 requests
 flask-restx
+pyyaml
+python-json-logger

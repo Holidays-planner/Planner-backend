@@ -3,9 +3,13 @@ import os
 from run import app, api
 from routes.users import users_ns
 from routes.auth import auth_ns
+from utils.database import DatabaseUtils
 
 api.add_namespace(users_ns, path='/users')
 api.add_namespace(auth_ns, path='/auth')
+
+with app.app_context():
+    DatabaseUtils.start()
 # Health check endpoint
 @app.route('/health')
 def health_check():
@@ -26,4 +30,5 @@ def internal_error(error):
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(debug=False, host='localhost', port=port)
+    debug = bool(os.environ.get('FLASK_DEBUG', True))
+    app.run(debug=debug, host='localhost', port=port)
