@@ -28,8 +28,6 @@ BEGIN
         id SERIAL PRIMARY KEY,
         role_id INT NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
         action_id INT NOT NULL REFERENCES actions(id) ON DELETE CASCADE,
-        created_at TIMESTAMP DEFAULT NOW(),
-        updated_at TIMESTAMP DEFAULT NOW(),
         UNIQUE (role_id, action_id)
     );
 
@@ -56,13 +54,13 @@ BEGIN
     -- Create `users` table
     CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
-        username VARCHAR(255) NOT NULL UNIQUE,
-        email VARCHAR(255) NOT NULL UNIQUE,
+        username VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
         password_hash TEXT NOT NULL,
-        first_name VARCHAR(255),
-        last_name VARCHAR(255),
+        status VARCHAR(50) DEFAULT 'pending' CHECK (status IN ('pending', 'active', 'suspended', 'deactivated')),
         created_at TIMESTAMP DEFAULT NOW(),
-        updated_at TIMESTAMP DEFAULT NOW()
+        updated_at TIMESTAMP DEFAULT NOW(),
+        UNIQUE (email)
     );
 
     -- Create `user_roles` table
@@ -136,6 +134,16 @@ BEGIN
         role_id INT REFERENCES roles(id) ON DELETE CASCADE,
         joined_at TIMESTAMP DEFAULT NOW(),
         UNIQUE (plan_id, user_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS error_messages (
+        id SERIAL PRIMARY KEY,
+        error_code VARCHAR(100) NOT NULL,
+        message TEXT NOT NULL,
+        language VARCHAR(10) NOT NULL DEFAULT 'en',
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW(),
+        UNIQUE (error_code, language)
     );
 
     -- Notify that the procedure has completed

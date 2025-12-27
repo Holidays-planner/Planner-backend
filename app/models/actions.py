@@ -10,3 +10,7 @@ class Actions(BaseModel):
     description = db.Column(db.String(500))
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, default=datetime.now(), onupdate=datetime.now())
+
+    @property
+    def scope_action(self):
+        return f"{self.scope}:{self.action_key}"

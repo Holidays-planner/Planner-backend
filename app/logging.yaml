@@ -1,0 +1,24 @@
+version: 1
+disable_existing_loggers: false
+handlers:
+  hand01:
+    class: logging.StreamHandler
+    formatter: json
+    level: NOTSET
+    stream: ext://sys.stdout
+formatters:
+  json:
+    format: '%(asctime)s - %(levelname)s - %(message)s %(funcName)'
+    dateformat: '%Y-%m-%d %H:%M:%S'
+    class: 'pythonjsonlogger.jsonlogger.JsonFormatter'
+loggers:
+  root:
+    handlers:
+      - hand01
+    level: INFO
+    propagate: true
+root:
+  handlers:
+      - hand01
+  level: INFO
+  propagate: true

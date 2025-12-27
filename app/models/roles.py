@@ -12,3 +12,10 @@ class Roles(BaseModel):
 
     # Relationships
     role_actions = db.relationship('RoleActions', backref='role', lazy=True, cascade='all, delete-orphan')
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'role_name': self.role_name,
+            'description': self.description
+        }

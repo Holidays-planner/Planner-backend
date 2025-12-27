@@ -48,10 +48,8 @@ A comprehensive REST API built with Flask for vacation planning and social colla
    createdb planner_db
    
    # Run database scripts in order
-   psql -d planner_db -f db/01_Create_Tables.sql
-   psql -d planner_db -f db/02_Insert_Master_Data.sql
-   psql -d planner_db -f db/03_RBAC_Sample_Data.sql
-   psql -d planner_db -f db/04_RBAC_Views_Functions.sql
+   psql -d planner_db -f db/001_Create_Tables.sql
+   psql -d planner_db -f db/101_Insert_Master_Data.sql
    ```
 
 5. **Configure environment**
